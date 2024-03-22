@@ -9,6 +9,8 @@ import (
 )
 
 func main() {
+	NewLogger("g")
+
 	godotenv.Load("config/.env")
 	port := os.Getenv("port")
 	mux := http.NewServeMux()
