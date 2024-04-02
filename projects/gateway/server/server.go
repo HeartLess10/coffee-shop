@@ -9,7 +9,7 @@ import (
 type Server struct {
 	port    int
 	domName string
-	l       *MyLogger
+	l       CustomLogger
 }
 
 func (s *Server) Serve() {

@@ -1,4 +1,4 @@
-package CustomLogger
+package customLogger
 
 import (
 	"fmt"
