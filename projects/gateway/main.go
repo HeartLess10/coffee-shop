@@ -9,8 +9,11 @@ import (
 )
 
 func main() {
-	godotenv.Load("config/.env")
-	port := os.Getenv("port")
+	godotenv.Load("./config/.env")
+	port := os.Getenv("PORT")
+	mydir, _ := os.Getwd()
+	fmt.Print("hhhh:" + mydir)
+	fmt.Print("hhhh:" + port)
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "Hello world")
