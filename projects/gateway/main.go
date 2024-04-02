@@ -10,9 +10,8 @@ import (
 
 func main() {
 	godotenv.Load("./config/.env")
-	port := os.Getenv("PORT")
 	l := customLogger.NewPrettyCustomLogger("coffee-shop")
-	server := server.NewServer(port, "localhost", l)
+	server := server.NewServer(os.Getenv("PORT"), os.Getenv("GATEWAY_ADDRESS"), l)
 	server.Serve()
 
 }

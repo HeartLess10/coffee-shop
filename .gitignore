@@ -5,6 +5,8 @@ dist
 tmp
 /out-tsc
 
+.vscode/
+
 # dependencies
 node_modules
 
@@ -39,3 +41,4 @@ testem.log
 Thumbs.db
 
 .nx/cache
+.nx/
