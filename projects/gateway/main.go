@@ -13,5 +13,4 @@ func main() {
 	l := customLogger.NewPrettyCustomLogger("coffee-shop")
 	server := server.NewServer(os.Getenv("PORT"), os.Getenv("GATEWAY_ADDRESS"), l)
 	server.Serve()
-
 }

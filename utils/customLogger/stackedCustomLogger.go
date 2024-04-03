@@ -1,6 +1,7 @@
 package customLogger
 
 import (
+	"fmt"
 	"log"
 	"time"
 )
@@ -20,7 +21,7 @@ func (l *stackedCustomLogger) Info(msg string) {
 
 // Error prints the error message in red to the console with a timestamp
 func (l *stackedCustomLogger) Error(err error) {
-	log.Printf("%s [%s] [ERROR] \033[31mERROR: %s\033[0m\n", time.Now().Format("2006-01-02 15:04:05"), l.prefix, err.Error())
+	panic(fmt.Sprintf("%s [%s] [ERROR] \033[31mERROR: %s\033[0m\n", time.Now().Format("2006-01-02 15:04:05"), l.prefix, err.Error()))
 }
 
 // Message prints the message in green to the console with a timestamp

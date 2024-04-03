@@ -20,5 +20,13 @@
     "@nx/go": {
       "analyzeSourceFiles": true
     }
+  },
+  "targetDefaults": {
+    "build": {
+      "inputs": [
+        "production",
+        "^production"
+      ]
+    }
   }
 }

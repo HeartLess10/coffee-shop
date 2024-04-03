@@ -1,0 +1,13 @@
+version: '3'
+services:
+  scylladb:
+    image: scylladb/scylla
+    environment:
+      - CLUSTER_NAME=my-scylla-cluster  # Replace with your desired cluster name
+    ports:
+      - 9042:9042  # ScyllaDB CQL port
+    volumes:
+      - scylla-data:/var/lib/scylladb  # Mount a named volume named scylla-data
+
+volumes:
+  scylla-data:  # Define the named volume

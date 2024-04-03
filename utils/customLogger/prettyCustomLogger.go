@@ -23,7 +23,7 @@ func (l *prettyCustomLogger) Info(msg string) {
 // Error prints the error message in red to the console with a timestamp
 func (l *prettyCustomLogger) Error(err error) {
 	log.Printf("[%s] [ERROR] %s\n", l.prefix, time.Now().Format("2006-01-02 15:04:05"))
-	fmt.Printf("\033[31mERROR: %s\033[0m\n", err.Error())
+	panic(fmt.Sprintf("\033[31mERROR: %s\033[0m\n", err.Error()))
 }
 
 // Message prints the message in green to the console with a timestamp

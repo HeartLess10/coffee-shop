@@ -1,9 +1,9 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
-	"github.com/HeartLess10/coffee-shop/coffee-shop/projects/gateway/server/handlers/databaseHandlers"
 	"github.com/HeartLess10/coffee-shop/coffee-shop/utils/customLogger"
 )
 
@@ -22,9 +22,11 @@ func NewServer(port string, domName string, l customLogger.CustomLogger) Server 
 }
 
 func (s *server) Serve() {
-	s.l.Message("Starting gateway server address: " + s.domName + ":" + s.port)
+	s.l.Message("Starting database manager server address: " + s.domName + ":" + s.port)
 	mux := http.NewServeMux()
-	mux.HandleFunc("PUT /RegisterNewUser", databaseHandlers.AddUser)
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "Hello world")
+	})
 
 	if err := http.ListenAndServe(s.domName+":"+s.port, mux); err != nil {
 		s.l.Error(err)
