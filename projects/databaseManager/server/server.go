@@ -1,9 +1,11 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/HeartLess10/coffee-shop/coffee-shop/projects/databaseManager/dbManager"
+	"github.com/HeartLess10/coffee-shop/coffee-shop/projects/databaseManager/server/handlers"
+	"github.com/HeartLess10/coffee-shop/coffee-shop/projects/databaseManager/server/middleware"
 	"github.com/HeartLess10/coffee-shop/coffee-shop/utils/customLogger"
 )
 
@@ -12,23 +14,33 @@ type Server interface {
 }
 
 type server struct {
-	port    string
-	domName string
-	l       customLogger.CustomLogger
+	m   middleware.Middleware
+	s   http.Server
+	l   customLogger.CustomLogger
+	dbm *dbManager.DbManager
 }
 
-func NewServer(port string, domName string, l customLogger.CustomLogger) Server {
-	return &server{domName: domName, port: port, l: l}
+func NewServer(port string, domName string, dbm *dbManager.DbManager, l customLogger.CustomLogger) Server {
+	m := middleware.NewMiddleware(l)
+	s := http.Server{
+		Addr: domName + ":" + port,
+	}
+
+	return &server{dbm: dbm, m: m, s: s, l: l}
 }
 
 func (s *server) Serve() {
-	s.l.Message("Starting database manager server address: " + s.domName + ":" + s.port)
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Hello world")
-	})
+	s.l.Message("Starting database manager server address: " + s.s.Addr)
+	router := http.NewServeMux()
+	h := handlers.NewHandler(s.dbm)
+	initMuxHandlers(router, h)
 
-	if err := http.ListenAndServe(s.domName+":"+s.port, mux); err != nil {
-		s.l.Error(err)
+	s.s.Handler = s.m.Logging(router)
+	if err := s.s.ListenAndServe(); err != nil {
+		panic(err)
 	}
+}
+
+func initMuxHandlers(router *http.ServeMux, h handlers.Handler) {
+	router.HandleFunc("POST /addUser", h.AddUser)
 }

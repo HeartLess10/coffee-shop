@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"os"
 
-	"github.com/HeartLess10/coffee-shop/coffee-shop/projects/databaseManager/dbManager/factory"
+	"github.com/HeartLess10/coffee-shop/coffee-shop/projects/databaseManager/dbManager"
 	"github.com/HeartLess10/coffee-shop/coffee-shop/projects/databaseManager/server"
 	"github.com/HeartLess10/coffee-shop/coffee-shop/utils/customLogger"
 	"github.com/joho/godotenv"
@@ -13,15 +13,14 @@ import (
 func main() {
 	godotenv.Load("./config/.env")
 	l := customLogger.NewPrettyCustomLogger("coffee-shop")
-	server := server.NewServer(os.Getenv("PORT"), os.Getenv("DB_MANAGER_ADDRESS"), l)
-	factory := factory.NewDbManagerFactory(l)
-	if factory == nil {
-		l.Error(fmt.Errorf("couldn't create database manager factory."))
+
+	dbm := dbManager.NewDbManager(dbManager.Mongo, os.Getenv("DATABASE_NAME"), l)
+	err := dbm.Connect(context.Background(), l)
+	if err != nil {
+		panic(err)
 	}
-	dbManager := factory.CreateDbManager("mongo")
-	if dbManager == nil {
-		l.Error(fmt.Errorf("couldn't create database manager"))
-	}
-	dbManager.Connect()
+	server := server.NewServer(os.Getenv("PORT"), os.Getenv("DB_MANAGER_ADDRESS"), dbm, l)
+
+	defer dbm.Disconnect(context.Background())
 	server.Serve()
 }
